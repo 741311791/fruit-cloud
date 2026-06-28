@@ -52,7 +52,7 @@ export const THEMES: ThemeMeta[] = [
   },
 ]
 
-export const DEFAULT_THEME: ThemeId = 'emerald-dark'
+export const DEFAULT_THEME: ThemeId = 'fresh-light'
 export const THEME_STORAGE_KEY = 'fruit-theme'
 
 export const themeById = (id: string): ThemeMeta =>
