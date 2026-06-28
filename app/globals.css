@@ -54,14 +54,13 @@
 
 /* ===========================================================================
    Theme system — 4 palettes selected via [data-theme] on <html>.
-   Default (:root) mirrors "翠绿暗夜". --radius is shared across all themes.
+   Default (:root) mirrors "鲜果浅绿". --radius is shared across all themes.
    =========================================================================== */
 :root {
   --radius: 0.7rem;
 }
 
-/* ---- 翠绿暗夜 · emerald-dark (default) ---------------------------------- */
-:root,
+/* ---- 翠绿暗夜 · emerald-dark ------------------------------------------- */
 [data-theme='emerald-dark'] {
   color-scheme: dark;
   --background: oklch(0.16 0.006 240);
@@ -182,7 +181,8 @@
   --sidebar-ring: oklch(0.8 0 0);
 }
 
-/* ---- 鲜果浅绿 · fresh-light --------------------------------------------- */
+/* ---- 鲜果浅绿 · fresh-light (default) ----------------------------------- */
+:root,
 [data-theme='fresh-light'] {
   color-scheme: light;
   --background: oklch(0.98 0.006 150);

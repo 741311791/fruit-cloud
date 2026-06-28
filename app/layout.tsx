@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#1a1c1f',
+  colorScheme: 'light',
+  themeColor: '#f5f8f4',
 }
 
 export default function RootLayout({
@@ -29,8 +29,8 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      data-theme="emerald-dark"
-      className={`dark ${geistSans.variable} ${geistMono.variable} bg-background`}
+      data-theme="fresh-light"
+      className={`${geistSans.variable} ${geistMono.variable} bg-background`}
       suppressHydrationWarning
     >
       <head>
