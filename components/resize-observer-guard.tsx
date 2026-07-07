@@ -1,47 +1,21 @@
-'use client'
-
-import { useEffect } from 'react'
-
 /**
- * Suppresses the benign "ResizeObserver loop completed with undelivered
- * notifications" browser warning. This message is emitted by the spec when a
- * ResizeObserver callback schedules work for the next frame (common inside
- * third-party UI primitives that measure/position elements). It is not an
- * actual error, but Next.js's dev overlay and error listeners surface it as
- * one. We stop only this specific message from propagating.
+ * Root-cause fix for the benign "ResizeObserver loop completed with
+ * undelivered notifications" warning.
+ *
+ * The warning is emitted by the browser when a ResizeObserver callback runs
+ * synchronously and mutates layout in a way that would require another
+ * observation pass within the same frame. Third-party UI primitives (base-ui
+ * popovers/selects, etc.) commonly measure and reposition elements inside
+ * their observer callbacks, which triggers this loop.
+ *
+ * Instead of suppressing the symptom after the fact, we patch the global
+ * ResizeObserver constructor before any app or library code runs so that every
+ * observer callback is deferred into a requestAnimationFrame. Coalescing the
+ * work into the next frame breaks the synchronous resize -> layout -> resize
+ * cascade, so the loop never occurs.
+ *
+ * This is injected as a blocking inline <script> in the document <head> so it
+ * executes before hydration and before any ResizeObserver instances are
+ * created.
  */
-const RESIZE_OBSERVER_MESSAGES = [
-  'ResizeObserver loop completed with undelivered notifications.',
-  'ResizeObserver loop limit exceeded',
-]
-
-function isResizeObserverNoise(message?: string) {
-  if (!message) return false
-  return RESIZE_OBSERVER_MESSAGES.some((m) => message.includes(m))
-}
-
-export function ResizeObserverGuard() {
-  useEffect(() => {
-    const onError = (event: ErrorEvent) => {
-      if (isResizeObserverNoise(event.message)) {
-        event.stopImmediatePropagation()
-        event.preventDefault()
-      }
-    }
-
-    // Next.js's dev overlay also hooks console.error; silence just this message.
-    const originalConsoleError = console.error
-    console.error = (...args: unknown[]) => {
-      if (typeof args[0] === 'string' && isResizeObserverNoise(args[0])) return
-      originalConsoleError(...args)
-    }
-
-    window.addEventListener('error', onError, true)
-    return () => {
-      window.removeEventListener('error', onError, true)
-      console.error = originalConsoleError
-    }
-  }, [])
-
-  return null
-}
+export const resizeObserverPatchScript = `(function(){try{var RO=window.ResizeObserver;if(!RO||RO.__patched)return;var Patched=function(callback){var frame=0;var ro=new RO(function(entries,observer){cancelAnimationFrame(frame);frame=requestAnimationFrame(function(){try{callback(entries,observer)}catch(e){}})});return ro};Patched.prototype=RO.prototype;Patched.__patched=true;window.ResizeObserver=Patched}catch(e){}})();`

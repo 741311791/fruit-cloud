@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ThemeProvider, themeInitScript } from '@/components/theme-provider'
 import { PreferencesProvider } from '@/components/preferences-provider'
 import { AuthProvider } from '@/components/auth/auth-provider'
-import { ResizeObserverGuard } from '@/components/resize-observer-guard'
+import { resizeObserverPatchScript } from '@/components/resize-observer-guard'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -37,10 +37,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: resizeObserverPatchScript }} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="font-sans antialiased">
-        <ResizeObserverGuard />
         <ThemeProvider>
           <PreferencesProvider>
             <AuthProvider>{children}</AuthProvider>
