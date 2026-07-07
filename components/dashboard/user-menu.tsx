@@ -24,6 +24,7 @@ import { CURRENT_USER } from '@/lib/current-user'
 import { THEMES, themeById } from '@/lib/themes'
 import { useTheme } from '@/components/theme-provider'
 import { LANGUAGES, usePreferences } from '@/components/preferences-provider'
+import { useAuth } from '@/components/auth/auth-provider'
 
 function Swatch({ colors }: { colors: [string, string, string] }) {
   return (
@@ -44,6 +45,14 @@ type UserMenuProps = {
 export function UserMenu({ onNavigate }: UserMenuProps) {
   const { theme, setTheme } = useTheme()
   const { language, setLanguage } = usePreferences()
+  const { user, logout } = useAuth()
+
+  const person = {
+    name: user?.name ?? CURRENT_USER.name,
+    roleLabel: user?.roleLabel ?? CURRENT_USER.roleLabel,
+    deptLabel: user?.deptLabel ?? CURRENT_USER.deptLabel,
+    initial: user?.initial ?? CURRENT_USER.initial,
+  }
 
   return (
     <DropdownMenu>
@@ -56,7 +65,7 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
           >
             <Avatar className="size-9">
               <AvatarFallback className="bg-secondary text-xs font-medium text-secondary-foreground">
-                {CURRENT_USER.initial}
+                {person.initial}
               </AvatarFallback>
             </Avatar>
             <ChevronDown className="hidden size-4 text-muted-foreground sm:block" />
@@ -68,17 +77,17 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
         <div className="flex items-center gap-3 px-2 py-2">
           <Avatar className="size-11">
             <AvatarFallback className="bg-primary/12 text-sm font-semibold text-primary">
-              {CURRENT_USER.initial}
+              {person.initial}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-foreground">{CURRENT_USER.name}</p>
+            <p className="truncate text-sm font-semibold text-foreground">{person.name}</p>
             <p className="mt-0.5 flex items-center gap-1.5">
               <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
-                {CURRENT_USER.roleLabel}
+                {person.roleLabel}
               </span>
             </p>
-            <p className="mt-1 truncate text-[11px] text-muted-foreground">{CURRENT_USER.deptLabel}</p>
+            <p className="mt-1 truncate text-[11px] text-muted-foreground">{person.deptLabel}</p>
           </div>
         </div>
 
@@ -140,7 +149,7 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem variant="destructive" className="gap-2 py-2">
+        <DropdownMenuItem variant="destructive" className="gap-2 py-2" onClick={logout}>
           <LogOut className="size-4" />
           <span className="flex-1">退出登录</span>
         </DropdownMenuItem>
