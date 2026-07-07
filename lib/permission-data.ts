@@ -69,6 +69,8 @@ export type Role = {
   enabled: boolean
   remark?: string
   builtIn?: boolean
+  /** View-only role: only the "查看" action can be granted; other actions are locked. */
+  viewOnly?: boolean
   /** Menu leaf ids granted for this role. */
   menuIds: string[]
   /** Map of leaf id -> granted action keys. */
@@ -234,9 +236,10 @@ export const INITIAL_ROLES: Role[] = [
     name: '只读查看者',
     code: 'VIEWER',
     description: '所有模块仅查看权限，无任何操作权限',
-    dataScope: 'custom',
-    scopeNote: '给老板 / 外部审计',
+    dataScope: 'self',
     enabled: true,
+    remark: '给老板 / 外部审计',
+    viewOnly: true,
     ...grantViewAll(),
   },
 ]

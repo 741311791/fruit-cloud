@@ -208,6 +208,10 @@ function DepartmentDialog({
   const patch = (p: Partial<typeof draft>) => setDraft((d) => ({ ...d, ...p }))
   // A department cannot be its own parent (or a descendant) — simple guard: exclude self.
   const parentOptions = flattenDepartments(departments).filter((o) => o.id !== dept?.id)
+  const parentItems = {
+    root: '顶级部门',
+    ...Object.fromEntries(parentOptions.map((o) => [String(o.id), o.label])),
+  }
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -223,6 +227,7 @@ function DepartmentDialog({
             <Label className="text-xs">上级部门</Label>
             <Select
               value={draft.parentId === null ? 'root' : String(draft.parentId)}
+              items={parentItems}
               onValueChange={(v) => patch({ parentId: v === 'root' ? null : Number(v) })}
             >
               <SelectTrigger className="h-9">

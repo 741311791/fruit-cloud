@@ -63,6 +63,8 @@ export function UserDialog({
 
   const patch = (p: Partial<Draft>) => setDraft((d) => ({ ...d, ...p }))
   const deptOptions = flattenDepartments(departments)
+  const deptItems = Object.fromEntries(deptOptions.map((d) => [String(d.id), d.label]))
+  const roleItems = Object.fromEntries(roles.map((r) => [String(r.id), r.name]))
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -108,7 +110,11 @@ export function UserDialog({
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">所属部门</Label>
-            <Select value={String(draft.deptId)} onValueChange={(v) => patch({ deptId: Number(v) })}>
+            <Select
+              value={String(draft.deptId)}
+              items={deptItems}
+              onValueChange={(v) => patch({ deptId: Number(v) })}
+            >
               <SelectTrigger className="h-9">
                 <SelectValue />
               </SelectTrigger>
@@ -124,7 +130,11 @@ export function UserDialog({
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">角色</Label>
-            <Select value={String(draft.roleId)} onValueChange={(v) => patch({ roleId: Number(v) })}>
+            <Select
+              value={String(draft.roleId)}
+              items={roleItems}
+              onValueChange={(v) => patch({ roleId: Number(v) })}
+            >
               <SelectTrigger className="h-9">
                 <SelectValue />
               </SelectTrigger>

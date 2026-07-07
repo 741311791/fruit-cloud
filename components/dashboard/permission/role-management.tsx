@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Search, RotateCcw, ShieldCheck, Pencil, Trash2, Lock } from 'lucide-react'
+import { Plus, Search, RotateCcw, ShieldCheck, Trash2, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
@@ -178,16 +178,6 @@ export function RoleManagement({
                     >
                       <ShieldCheck className="size-3.5" />
                       {r.builtIn ? '查看' : '权限配置'}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={r.builtIn}
-                      className="h-8 gap-1 px-2 text-xs text-muted-foreground"
-                      onClick={() => openEdit(r)}
-                    >
-                      <Pencil className="size-3.5" />
-                      编辑
                     </Button>
                     <Button
                       variant="ghost"

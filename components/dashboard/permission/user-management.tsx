@@ -46,6 +46,15 @@ export function UserManagement({
   const deptMap = useMemo(() => new Map(departments.map((d) => [d.id, d.name])), [departments])
   const roleMap = useMemo(() => new Map(roles.map((r) => [r.id, r.name])), [roles])
   const deptOptions = useMemo(() => flattenDepartments(departments), [departments])
+  const deptFilterItems = useMemo(
+    () => ({ all: '全部', ...Object.fromEntries(deptOptions.map((d) => [String(d.id), d.label])) }),
+    [deptOptions],
+  )
+  const roleFilterItems = useMemo(
+    () => ({ all: '全部', ...Object.fromEntries(roles.map((r) => [String(r.id), r.name])) }),
+    [roles],
+  )
+  const statusFilterItems = { all: '全部', true: '启用', false: '停用' }
 
   const filtered = users.filter((u) => {
     if (account && !u.account.toLowerCase().includes(account.toLowerCase())) return false
@@ -116,7 +125,7 @@ export function UserManagement({
           />
         </Field>
         <Field label="所属部门">
-          <Select value={deptFilter} onValueChange={setDeptFilter}>
+          <Select value={deptFilter} items={deptFilterItems} onValueChange={setDeptFilter}>
             <SelectTrigger className="h-9 w-40">
               <SelectValue />
             </SelectTrigger>
@@ -132,7 +141,7 @@ export function UserManagement({
           </Select>
         </Field>
         <Field label="角色">
-          <Select value={roleFilter} onValueChange={setRoleFilter}>
+          <Select value={roleFilter} items={roleFilterItems} onValueChange={setRoleFilter}>
             <SelectTrigger className="h-9 w-40">
               <SelectValue />
             </SelectTrigger>
@@ -147,7 +156,7 @@ export function UserManagement({
           </Select>
         </Field>
         <Field label="账号状态">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <Select value={statusFilter} items={statusFilterItems} onValueChange={setStatusFilter}>
             <SelectTrigger className="h-9 w-32">
               <SelectValue />
             </SelectTrigger>

@@ -52,7 +52,17 @@ export function TopBar({ active, range, onRangeChange }: TopBarProps) {
 
       {isDashboard && (
         <>
-          <Select value={range} onValueChange={onRangeChange}>
+          <Select
+            value={range}
+            items={{
+              today: '今日',
+              week: '本周',
+              month: '本月累计',
+              quarter: '本季度',
+              year: '本年度',
+            }}
+            onValueChange={onRangeChange}
+          >
             <SelectTrigger className="h-9 w-[132px] gap-2 bg-card text-sm">
               <Calendar className="size-4 text-muted-foreground" />
               <SelectValue />

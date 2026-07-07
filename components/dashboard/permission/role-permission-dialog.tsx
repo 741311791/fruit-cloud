@@ -86,6 +86,7 @@ export function RolePermissionDialog({
   }, [open, role])
 
   const readOnly = role?.builtIn ?? false
+  const viewOnly = role?.viewOnly ?? false
   const deptOptions = useMemo(() => flattenDepartments(departments), [departments])
 
   const patch = (p: Partial<Draft>) => setDraft((d) => ({ ...d, ...p }))
@@ -110,6 +111,7 @@ export function RolePermissionDialog({
 
   const toggleAction = (leafId: string, action: ActionKey, checked: boolean) => {
     if (readOnly) return
+    if (viewOnly && action !== 'view') return
     setDraft((d) => {
       const menuIds = new Set(d.menuIds)
       const actions = { ...d.actions }
@@ -161,7 +163,7 @@ export function RolePermissionDialog({
       PERMISSION_TREE.forEach((n) =>
         n.children.forEach((c) => {
           menuIds.add(c.id)
-          actions[c.id] = [...ALL_ACTIONS]
+          actions[c.id] = viewOnly ? ['view'] : [...ALL_ACTIONS]
         }),
       )
       patch({ menuIds, actions })
@@ -267,6 +269,7 @@ export function RolePermissionDialog({
               <div className="grid gap-2 sm:grid-cols-2">
                 <Select
                   value={draft.dataScope}
+                  items={DATA_SCOPE_LABELS}
                   disabled={readOnly}
                   onValueChange={(v) => patch({ dataScope: v as DataScope })}
                 >
@@ -371,23 +374,26 @@ export function RolePermissionDialog({
                                   <span className="text-sm text-foreground">{leaf.label}</span>
                                 </label>
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-                                  {ACTION_LABELS.map((a) => (
+                                  {ACTION_LABELS.map((a) => {
+                                    const actionLocked = viewOnly && a.key !== 'view'
+                                    return (
                                     <label
                                       key={a.key}
                                       className={cn(
                                         'flex items-center gap-1.5 text-xs',
-                                        !checked && 'opacity-50',
+                                        (!checked || actionLocked) && 'opacity-50',
                                       )}
                                     >
                                       <Checkbox
                                         className="size-3.5"
                                         checked={granted.includes(a.key)}
-                                        disabled={readOnly}
+                                        disabled={readOnly || actionLocked}
                                         onCheckedChange={(v) => toggleAction(leaf.id, a.key, v)}
                                       />
                                       <span className="text-muted-foreground">{a.label}</span>
                                     </label>
-                                  ))}
+                                    )
+                                  })}
                                 </div>
                               </div>
                             )
