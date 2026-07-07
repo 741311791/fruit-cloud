@@ -3,7 +3,6 @@
 import {
   Settings,
   Palette,
-  Moon,
   Languages,
   LogOut,
   Check,
@@ -20,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
 import { CURRENT_USER } from '@/lib/current-user'
 import { THEMES, themeById } from '@/lib/themes'
@@ -46,7 +44,6 @@ type UserMenuProps = {
 export function UserMenu({ onNavigate }: UserMenuProps) {
   const { theme, setTheme } = useTheme()
   const { language, setLanguage } = usePreferences()
-  const isDark = themeById(theme).dark
 
   return (
     <DropdownMenu>
@@ -116,17 +113,6 @@ export function UserMenu({ onNavigate }: UserMenuProps) {
             ))}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
-
-        {/* Dark mode quick toggle */}
-        <DropdownMenuItem
-          closeOnClick={false}
-          onClick={() => setTheme(isDark ? 'fresh-light' : 'emerald-dark')}
-          className="gap-2 py-2"
-        >
-          <Moon className="size-4 text-muted-foreground" />
-          <span className="flex-1">暗黑模式</span>
-          <Switch checked={isDark} className="pointer-events-none" tabIndex={-1} aria-hidden />
-        </DropdownMenuItem>
 
         {/* Language submenu */}
         <DropdownMenuSub>
