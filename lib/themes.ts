@@ -3,7 +3,6 @@ export type ThemeId =
   | 'amber-dark'
   | 'obsidian-dark'
   | 'fresh-light'
-  | 'azure-light'
 
 export type ThemeMeta = {
   id: ThemeId
@@ -42,13 +41,6 @@ export const THEMES: ThemeMeta[] = [
     desc: '清爽白底 · 自然绿主色',
     dark: false,
     swatch: ['#f5f8f4', '#ffffff', '#2f9e63'],
-  },
-  {
-    id: 'azure-light',
-    label: '天青浅蓝',
-    desc: '商务白底 · 深蓝侧栏',
-    dark: false,
-    swatch: ['#f4f6fa', '#ffffff', '#2f6df0'],
   },
 ]
 
