@@ -194,7 +194,7 @@ function DepartmentDialog({
     name: dept?.name ?? '',
     code: dept?.code ?? '',
     leader: dept?.leader ?? '',
-    parentId: dept?.parentId ?? (departments[0]?.id ?? null),
+    parentId: dept ? dept.parentId : null,
     sort: dept?.sort ?? 1,
     enabled: dept?.enabled ?? true,
   })
