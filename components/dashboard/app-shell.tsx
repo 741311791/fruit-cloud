@@ -9,6 +9,7 @@ import { ModulePlaceholder } from './module-placeholder'
 import { PermissionManagement } from './permission-management'
 import { ProfileCenter } from './profile/profile-center'
 import { navLabels } from '@/lib/nav'
+import { cn } from '@/lib/utils'
 
 const MAX_TABS = 20
 const HOME_ID = 'dashboard'
@@ -133,15 +134,21 @@ export function AppShell() {
           onCloseRight={closeRight}
         />
         <main className="relative min-h-0 flex-1 overflow-hidden">
-          {views.map((v) => (
-            <div
-              key={`${v.id}#${nonce[v.id] ?? 0}`}
-              hidden={v.id !== active}
-              className="h-full overflow-y-auto p-4 md:p-6"
-            >
-              {renderView(v.id)}
-            </div>
-          ))}
+          {views.map((v) => {
+            const isActive = v.id === active
+            return (
+              <div
+                key={`${v.id}#${nonce[v.id] ?? 0}`}
+                aria-hidden={!isActive}
+                className={cn(
+                  'absolute inset-0 overflow-y-auto p-4 md:p-6',
+                  isActive ? 'visible' : 'invisible pointer-events-none',
+                )}
+              >
+                {renderView(v.id)}
+              </div>
+            )
+          })}
         </main>
       </div>
 

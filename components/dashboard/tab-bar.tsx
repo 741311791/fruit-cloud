@@ -63,9 +63,18 @@ export function TabBar({
     updateArrows()
     const el = scrollerRef.current
     if (!el) return
-    const ro = new ResizeObserver(updateArrows)
+    // Defer the state update out of the observer callback to avoid the
+    // "ResizeObserver loop completed with undelivered notifications" warning.
+    let frame = 0
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(updateArrows)
+    })
     ro.observe(el)
-    return () => ro.disconnect()
+    return () => {
+      cancelAnimationFrame(frame)
+      ro.disconnect()
+    }
   }, [views.length, updateArrows])
 
   // Keep the active tab in view.
