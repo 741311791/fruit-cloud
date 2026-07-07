@@ -7,6 +7,7 @@ import { TabBar, type TabView } from './tab-bar'
 import { Overview } from './overview'
 import { ModulePlaceholder } from './module-placeholder'
 import { PermissionManagement } from './permission-management'
+import { ArchiveManagement } from './archive-management'
 import { ProfileCenter } from './profile/profile-center'
 import { navLabels } from '@/lib/nav'
 import { cn } from '@/lib/utils'
@@ -23,6 +24,7 @@ function tabTitle(id: string): string {
 function renderView(id: string) {
   if (id === HOME_ID) return <Overview />
   if (id === 'system-permission') return <PermissionManagement />
+  if (id === 'system-archive') return <ArchiveManagement />
   if (id === 'system-profile') return <ProfileCenter />
   return <ModulePlaceholder moduleId={id} />
 }
@@ -30,7 +32,6 @@ function renderView(id: string) {
 export function AppShell() {
   const [views, setViews] = useState<TabView[]>([{ id: HOME_ID, title: '首页', affix: true }])
   const [active, setActive] = useState(HOME_ID)
-  const [range, setRange] = useState('month')
   const [collapsed, setCollapsed] = useState(false)
   // Per-tab remount key: bumping it destroys the keep-alive cache (refresh).
   const [nonce, setNonce] = useState<Record<string, number>>({})
@@ -123,7 +124,7 @@ export function AppShell() {
         onToggle={() => setCollapsed((c) => !c)}
       />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar active={active} range={range} onRangeChange={setRange} onNavigate={openTab} />
+        <TopBar active={active} onNavigate={openTab} />
         <TabBar
           views={views}
           active={active}

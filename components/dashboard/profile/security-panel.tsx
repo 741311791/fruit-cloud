@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,53 +16,108 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import { OPERATION_LOGS } from '@/lib/current-user'
-
-function passwordStrength(pw: string): { score: number; label: string; tone: string } {
-  let score = 0
-  if (pw.length >= 8) score++
-  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++
-  if (/\d/.test(pw)) score++
-  if (/[^A-Za-z0-9]/.test(pw)) score++
-  if (!pw) return { score: 0, label: '', tone: '' }
-  if (score <= 1) return { score: 1, label: '弱', tone: 'bg-destructive' }
-  if (score === 2) return { score: 2, label: '中', tone: 'bg-warning' }
-  if (score === 3) return { score: 3, label: '强', tone: 'bg-primary' }
-  return { score: 4, label: '很强', tone: 'bg-success' }
-}
+import { PASSWORD_RULE_HINT, passwordStrength, validatePassword } from '@/lib/password'
+import { useAuth } from '@/components/auth/auth-provider'
+import { AuthToaster, useToasts } from '@/components/auth/auth-toast'
 
 export function SecurityPanel() {
+  const { changePassword, logout } = useAuth()
+  const { toasts, toast, dismiss } = useToasts()
+
+  const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
   const [confirm, setConfirm] = useState('')
+  const [showCurrent, setShowCurrent] = useState(false)
+  const [showNext, setShowNext] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
   const strength = useMemo(() => passwordStrength(next), [next])
+  const ruleError = next ? validatePassword(next) : null
   const mismatch = confirm.length > 0 && confirm !== next
+  const canSubmit = current.length > 0 && !ruleError && next.length > 0 && confirm.length > 0 && !mismatch
+
+  const submit = () => {
+    const err = validatePassword(next)
+    if (err) {
+      toast('error', err)
+      return
+    }
+    if (next !== confirm) {
+      toast('error', '两次输入的密码不一致')
+      return
+    }
+    setSubmitting(true)
+    setTimeout(() => {
+      const result = changePassword(current, next)
+      if (result) {
+        setSubmitting(false)
+        toast('error', result)
+        return
+      }
+      // Success: notify, then sign out and return to the login screen.
+      toast('success', '密码修改成功，请使用新密码重新登录')
+      setTimeout(() => logout(), 1200)
+    }, 500)
+  }
 
   return (
     <div className="space-y-10">
+      <AuthToaster toasts={toasts} onDismiss={dismiss} />
+
       {/* Change password */}
       <section className="space-y-5">
         <div>
           <h3 className="text-base font-semibold text-foreground">修改登录密码</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            定期更换密码可提升账户安全性，建议使用大小写字母、数字与符号的组合。
+            修改成功后需使用新密码重新登录。密码要求：{PASSWORD_RULE_HINT}。
           </p>
         </div>
 
         <div className="grid max-w-md gap-5">
           <div className="grid gap-2">
             <Label htmlFor="cur-pw">当前密码</Label>
-            <Input id="cur-pw" type="password" placeholder="请输入当前密码" className="h-9" />
+            <div className="relative">
+              <Input
+                id="cur-pw"
+                type={showCurrent ? 'text' : 'password'}
+                placeholder="请输入当前密码"
+                autoComplete="current-password"
+                value={current}
+                onChange={(e) => setCurrent(e.target.value)}
+                className="h-9 pr-9"
+              />
+              <button
+                type="button"
+                aria-label={showCurrent ? '隐藏密码' : '显示密码'}
+                onClick={() => setShowCurrent((s) => !s)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="new-pw">新密码</Label>
-            <Input
-              id="new-pw"
-              type="password"
-              placeholder="请输入新密码"
-              value={next}
-              onChange={(e) => setNext(e.target.value)}
-              className="h-9"
-            />
+            <div className="relative">
+              <Input
+                id="new-pw"
+                type={showNext ? 'text' : 'password'}
+                placeholder="请输入新密码"
+                autoComplete="new-password"
+                value={next}
+                onChange={(e) => setNext(e.target.value)}
+                className={cn('h-9 pr-9', ruleError && 'border-destructive')}
+              />
+              <button
+                type="button"
+                aria-label={showNext ? '隐藏密码' : '显示密码'}
+                onClick={() => setShowNext((s) => !s)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {showNext ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
             {next && (
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 gap-1">
@@ -78,6 +134,7 @@ export function SecurityPanel() {
                 <span className="w-8 text-xs text-muted-foreground">{strength.label}</span>
               </div>
             )}
+            {ruleError && <p className="text-xs text-destructive">{ruleError}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -86,6 +143,7 @@ export function SecurityPanel() {
               id="confirm-pw"
               type="password"
               placeholder="请再次输入新密码"
+              autoComplete="new-password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               className={cn('h-9', mismatch && 'border-destructive')}
@@ -94,7 +152,9 @@ export function SecurityPanel() {
           </div>
 
           <div>
-            <Button disabled={!next || mismatch}>更新密码</Button>
+            <Button disabled={!canSubmit || submitting} onClick={submit}>
+              {submitting ? '提交中…' : '更新密码'}
+            </Button>
           </div>
         </div>
       </section>
