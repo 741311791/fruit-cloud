@@ -33,7 +33,20 @@ export type NavGroup = {
 export const navGroups: NavGroup[] = [
   {
     title: '概览',
-    items: [{ id: 'dashboard', label: '数据看板', icon: LayoutDashboard }],
+    items: [
+      {
+        id: 'dashboard-board',
+        label: '数据看板',
+        icon: LayoutDashboard,
+        children: [
+          {
+            id: 'dashboard',
+            label: '经营盈亏全景',
+            desc: '经营仪表盘，含盈亏趋势、成本结构、毛利排名、应收应付等',
+          },
+        ],
+      },
+    ],
   },
   {
     title: '业务管理',
@@ -43,13 +56,8 @@ export const navGroups: NavGroup[] = [
         label: '采购管理',
         icon: ShoppingCart,
         children: [
-          { id: 'purchase-order', label: '采购单录入', desc: '供应商、商品、单价数量与售后规则录入' },
-          { id: 'purchase-return', label: '采购退货单', desc: '结合售后条件自动触发或手动发起退货' },
-          { id: 'purchase-exchange', label: '采购换货', desc: '同原料同重量不良库存等价换货' },
-          { id: 'purchase-stats', label: '采购商品统计', desc: '采购数量统计与单价波动分析' },
-          { id: 'purchase-query', label: '采购订单查询', desc: '采购订单检索与明细查看' },
-          { id: 'purchase-amount-adjust', label: '入库金额调整', desc: '针对成本延后或补录单价的订单' },
-          { id: 'purchase-request', label: '请购单', desc: '库管/办公发起请购，审核后转采购' },
+          { id: 'purchase-order', label: '采购单管理', desc: '采购单全生命周期：录入、查询、退货、换货统一入口' },
+          { id: 'purchase-request', label: '请购单', desc: '部门请购申请 → 审批 → 生成采购单' },
         ],
       },
       {
@@ -57,15 +65,10 @@ export const navGroups: NavGroup[] = [
         label: '仓储管理',
         icon: Warehouse,
         children: [
-          { id: 'warehouse-inbound', label: '到货入库', desc: '质检/扣损/正常收货与批次拍照入库' },
-          { id: 'warehouse-stock', label: '库存管理', desc: '在库/在途数量金额、预警与周转率' },
-          { id: 'warehouse-other-io', label: '其他出入库管理', desc: '非领料流程的调货、代加工出库' },
-          { id: 'warehouse-lock', label: '库存锁定', desc: '手动锁定与解除' },
-          { id: 'warehouse-alert', label: '库存不足预警', desc: '自动提醒并下发请购任务' },
-          { id: 'warehouse-transfer', label: '库存移库', desc: '次果、退货、报损等库位转移' },
-          { id: 'warehouse-reconcile', label: '库存对盘', desc: '同成本商品名称转换不影响毛利' },
-          { id: 'warehouse-count', label: '盘点管理', desc: '盘点任务、报损单、报溢单与审批' },
-          { id: 'warehouse-report', label: '仓库报表', desc: '进销存、出入库、报损报溢与批次跟踪' },
+          { id: 'warehouse-inbound', label: '到货入库', desc: '扫码/选择采购单，验收入库' },
+          { id: 'warehouse-stock', label: '库存管理', desc: '库存台账 + 锁定/移库/对盘/其他出入库等操作' },
+          { id: 'warehouse-count', label: '盘点管理', desc: '盘点计划 → 盘点执行 → 盘点差异处理' },
+          { id: 'warehouse-amount-adjust', label: '入库金额调整', desc: '入库后发现金额差异，在此调整' },
         ],
       },
       {
@@ -73,13 +76,16 @@ export const navGroups: NavGroup[] = [
         label: '生产管理',
         icon: Factory,
         children: [
-          { id: 'production-plan', label: '生产计划', desc: '提前一天预估，12点校准为正式任务单' },
-          { id: 'production-mrp', label: 'MRP运算', desc: '结合库存与领料测算所需原料耗材' },
-          { id: 'production-process', label: '生产加工', desc: '领料、加工进度单、工时与损耗反馈' },
-          { id: 'production-delivery', label: '完工交付', desc: '成品入库、次果坏果标记与售后退货' },
-          { id: 'production-cost', label: '出库成本', desc: '原料+加工+耗材+人工+框板的成本报表' },
-          { id: 'production-stats', label: '加工数据统计报表', desc: '商品/供应商/时间维度损耗与出品率' },
-          { id: 'production-rework', label: '退货二次加工/返工', desc: '退货位返工的二次分选与成本叠加' },
+          { id: 'production-plan', label: '生产计划', desc: '制定加工计划，分配产线和人员' },
+          {
+            id: 'production-schedule',
+            label: '生产计划排期',
+            desc: '结合近一周平均动销、同期订单量及节假日等因素做生产计划提前预估',
+          },
+          { id: 'production-mrp', label: 'MRP运算', desc: '物料需求计划计算，自动生成采购建议' },
+          { id: 'production-process', label: '生产加工', desc: '加工执行 + 退货二次加工/返工' },
+          { id: 'production-report', label: '生产报工', desc: '员工扫码填数实时反馈工时进度，支持拍照与视频上传' },
+          { id: 'production-delivery', label: '完工交付', desc: '完工入库确认，关联入库单' },
         ],
       },
       {
@@ -87,13 +93,9 @@ export const navGroups: NavGroup[] = [
         label: '销售管理',
         icon: TrendingUp,
         children: [
-          { id: 'sales-shipment', label: '发货', desc: '按订单分批成品出库与框板记录' },
-          { id: 'sales-handover', label: '交货', desc: '交货数量、报损/拒收差异拍照反馈' },
-          { id: 'sales-order', label: '销售订单', desc: '正式订单同步、拆分、单价与扣点核算' },
-          { id: 'sales-return', label: '销售退货单', desc: '交货拒收退货收货与跟踪' },
-          { id: 'sales-outsource', label: '委外销售', desc: '次果及积压商品委托销售与回款提醒' },
-          { id: 'sales-product-stats', label: '商品销售数据统计', desc: '商品维度销售统计查询' },
-          { id: 'sales-customer-stats', label: '客户销售数据查询', desc: '客户维度销售与毛利查询' },
+          { id: 'sales-order', label: '销售订单管理', desc: '销售订单 + 退货 + 客户数据查询，统一入口' },
+          { id: 'sales-shipment', label: '发货管理', desc: '发货 & 交货操作，合并原两个独立菜单' },
+          { id: 'sales-outsource', label: '委外销售', desc: '委托外部渠道销售的管理' },
         ],
       },
       {
@@ -101,8 +103,8 @@ export const navGroups: NavGroup[] = [
         label: '代加工管理',
         icon: Handshake,
         children: [
-          { id: 'oem-inbound', label: '代加工入库', desc: '其他入库单零成本入库与工时损耗记录' },
-          { id: 'oem-outbound', label: '代加工销售出库单', desc: '记录代加工成本与利润结算' },
+          { id: 'oem-inbound', label: '代加工入库', desc: '受托加工方的来料入库记录' },
+          { id: 'oem-outbound', label: '代加工销售出库单', desc: '代加工完成品销售出库' },
         ],
       },
     ],
@@ -115,10 +117,10 @@ export const navGroups: NavGroup[] = [
         label: '财务报表中心',
         icon: FileBarChart,
         children: [
-          { id: 'finance-operating', label: '经营报表', desc: '经营日报/月报/年报与资产负债表' },
-          { id: 'finance-reconcile', label: '会计对账管理', desc: '科目设置、往来资金与上下游对账' },
-          { id: 'finance-invoice', label: '总账发票管理', desc: '进销项发票、付款凭证与成本费用' },
-          { id: 'finance-closing', label: '财务扎帐功能', desc: '月底核对锁死数据，修改走审批' },
+          { id: 'finance-reconcile', label: '会计对账管理', desc: '往来对账、银行对账' },
+          { id: 'finance-invoice', label: '总账发票管理', desc: '进项/销项发票登记与管理' },
+          { id: 'finance-closing', label: '财务扎帐功能', desc: '月度/季度财务扎帐操作' },
+          { id: 'finance-cost', label: '出库成本核算', desc: '按加工单归集出库成本' },
         ],
       },
     ],
@@ -145,6 +147,7 @@ export const navGroups: NavGroup[] = [
         label: '系统管理',
         icon: Settings,
         children: [
+          { id: 'system-permission', label: '权限管理', desc: '用户、角色与部门的统一权限配置（RBAC）' },
           { id: 'system-base', label: '系统基础设置', desc: '权限、审批流、数据重建与系统开账' },
           { id: 'system-archive', label: '基础档案管理', desc: '商品/客户/供应商/职员与期初信息' },
         ],
