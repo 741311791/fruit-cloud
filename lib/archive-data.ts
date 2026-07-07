@@ -115,32 +115,99 @@ export const INITIAL_PRODUCTS: Product[] = [
 /* 职员（员工）档案                                                      */
 /* ------------------------------------------------------------------ */
 
+export type Gender = 'male' | 'female'
+export type Education = 'highschool' | 'college' | 'bachelor' | 'master' | 'other'
+export type MaritalStatus = 'single' | 'married'
+export type EmploymentType = 'fulltime' | 'parttime' | 'intern' | 'contractor'
+
 export type Staff = {
   id: number
   code: string
   employeeNo: string
   name: string
   pinyin: string
+  gender: Gender
+  /** 出生日期（yyyy-MM-dd）— 年龄由此实时推算 */
+  birthday: string
+  idCard: string
+  nativePlace: string
+  education: Education
+  maritalStatus: MaritalStatus
   phone: string
+  /** 紧急联系人及电话 */
+  emergencyContact: string
+  emergencyPhone: string
   deptId: number
   position: string
-  /** 是否开通系统账号（打开后才允许登录） */
-  hasAccount: boolean
-  /** 分配系统角色（联动权限管理） */
-  roleIds: number[]
+  employmentType: EmploymentType
+  /** 入职日期（yyyy-MM-dd）— 工龄由此实时推算 */
+  hireDate: string
   enabled: boolean
 }
 
+export const GENDER_LABELS: Record<Gender, string> = {
+  male: '男',
+  female: '女',
+}
+
+export const EDUCATION_LABELS: Record<Education, string> = {
+  highschool: '高中及以下',
+  college: '大专',
+  bachelor: '本科',
+  master: '硕士及以上',
+  other: '其他',
+}
+
+export const MARITAL_LABELS: Record<MaritalStatus, string> = {
+  single: '未婚',
+  married: '已婚',
+}
+
+export const EMPLOYMENT_TYPE_LABELS: Record<EmploymentType, string> = {
+  fulltime: '全职',
+  parttime: '兼职',
+  intern: '实习',
+  contractor: '劳务',
+}
+
 export const INITIAL_STAFF: Staff[] = [
-  { id: 1, code: 'EMP001', employeeNo: 'G0001', name: '张伟', pinyin: 'ZW', phone: '18800000001', deptId: 1, position: '总经理', hasAccount: true, roleIds: [1], enabled: true },
-  { id: 2, code: 'EMP002', employeeNo: 'G0002', name: '李强', pinyin: 'LQ', phone: '18800000002', deptId: 2, position: '采购主管', hasAccount: true, roleIds: [2], enabled: true },
-  { id: 3, code: 'EMP003', employeeNo: 'G0003', name: '刘洋', pinyin: 'LY', phone: '18800000003', deptId: 2, position: '采购员', hasAccount: true, roleIds: [3], enabled: true },
-  { id: 4, code: 'EMP004', employeeNo: 'G0004', name: '王芳', pinyin: 'WF', phone: '18800000004', deptId: 3, position: '仓库主管', hasAccount: true, roleIds: [4], enabled: true },
-  { id: 5, code: 'EMP005', employeeNo: 'G0005', name: '黄磊', pinyin: 'HL', phone: '18800000005', deptId: 3, position: '仓库操作员', hasAccount: true, roleIds: [5], enabled: true },
-  { id: 6, code: 'EMP006', employeeNo: 'G0006', name: '赵敏', pinyin: 'ZM', phone: '18800000006', deptId: 4, position: '生产主管', hasAccount: true, roleIds: [6], enabled: true },
-  { id: 7, code: 'EMP007', employeeNo: 'G0007', name: '孙丽', pinyin: 'SL', phone: '18800000011', deptId: 6, position: '销售专员', hasAccount: false, roleIds: [], enabled: true },
-  { id: 8, code: 'EMP008', employeeNo: 'G0008', name: '郑华', pinyin: 'ZH', phone: '18800000009', deptId: 9, position: '人事专员', hasAccount: true, roleIds: [9], enabled: false },
+  { id: 1, code: 'EMP001', employeeNo: 'G0001', name: '张伟', pinyin: 'ZW', gender: 'male', birthday: '1980-05-12', idCard: '610103198005121234', nativePlace: '陕西西安', education: 'master', maritalStatus: 'married', phone: '18800000001', emergencyContact: '刘婷（配偶）', emergencyPhone: '13911112222', deptId: 1, position: '总经理', employmentType: 'fulltime', hireDate: '2015-03-01', enabled: true },
+  { id: 2, code: 'EMP002', employeeNo: 'G0002', name: '李强', pinyin: 'LQ', gender: 'male', birthday: '1988-09-23', idCard: '610103198809234567', nativePlace: '河南郑州', education: 'bachelor', maritalStatus: 'married', phone: '18800000002', emergencyContact: '王梅（配偶）', emergencyPhone: '13933334444', deptId: 2, position: '采购主管', employmentType: 'fulltime', hireDate: '2018-06-15', enabled: true },
+  { id: 3, code: 'EMP003', employeeNo: 'G0003', name: '刘洋', pinyin: 'LY', gender: 'male', birthday: '1995-02-08', idCard: '610103199502087890', nativePlace: '山东济南', education: 'college', maritalStatus: 'single', phone: '18800000003', emergencyContact: '刘建国（父亲）', emergencyPhone: '13955556666', deptId: 2, position: '采购员', employmentType: 'fulltime', hireDate: '2021-04-10', enabled: true },
+  { id: 4, code: 'EMP004', employeeNo: 'G0004', name: '王芳', pinyin: 'WF', gender: 'female', birthday: '1990-11-30', idCard: '610103199011302345', nativePlace: '四川成都', education: 'bachelor', maritalStatus: 'married', phone: '18800000004', emergencyContact: '陈刚（配偶）', emergencyPhone: '13977778888', deptId: 3, position: '仓库主管', employmentType: 'fulltime', hireDate: '2019-08-01', enabled: true },
+  { id: 5, code: 'EMP005', employeeNo: 'G0005', name: '黄磊', pinyin: 'HL', gender: 'male', birthday: '1998-07-19', idCard: '610103199807196543', nativePlace: '湖北武汉', education: 'highschool', maritalStatus: 'single', phone: '18800000005', emergencyContact: '黄德华（父亲）', emergencyPhone: '13999990000', deptId: 3, position: '仓库操作员', employmentType: 'fulltime', hireDate: '2022-09-05', enabled: true },
+  { id: 6, code: 'EMP006', employeeNo: 'G0006', name: '赵敏', pinyin: 'ZM', gender: 'female', birthday: '1992-03-27', idCard: '610103199203274321', nativePlace: '江苏南京', education: 'bachelor', maritalStatus: 'married', phone: '18800000006', emergencyContact: '孙浩（配偶）', emergencyPhone: '13800001111', deptId: 4, position: '生产主管', employmentType: 'fulltime', hireDate: '2020-02-18', enabled: true },
+  { id: 7, code: 'EMP007', employeeNo: 'G0007', name: '孙丽', pinyin: 'SL', gender: 'female', birthday: '2001-12-05', idCard: '610103200112059876', nativePlace: '浙江杭州', education: 'college', maritalStatus: 'single', phone: '18800000011', emergencyContact: '孙志强（父亲）', emergencyPhone: '13822223333', deptId: 6, position: '销售专员', employmentType: 'intern', hireDate: '2024-07-01', enabled: true },
+  { id: 8, code: 'EMP008', employeeNo: 'G0008', name: '郑华', pinyin: 'ZH', gender: 'female', birthday: '1993-06-14', idCard: '610103199306145678', nativePlace: '广东广州', education: 'bachelor', maritalStatus: 'married', phone: '18800000009', emergencyContact: '林涛（配偶）', emergencyPhone: '13844445555', deptId: 9, position: '人事专员', employmentType: 'fulltime', hireDate: '2020-11-23', enabled: false },
 ]
+
+/** 根据出生日期实时推算年龄（周岁）。 */
+export function calcAge(birthday: string): number | null {
+  if (!birthday) return null
+  const b = new Date(birthday)
+  if (Number.isNaN(b.getTime())) return null
+  const now = new Date()
+  let age = now.getFullYear() - b.getFullYear()
+  const m = now.getMonth() - b.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--
+  return age
+}
+
+/** 根据入职日期实时推算工龄，返回“x年y个月”。 */
+export function calcSeniority(hireDate: string): string {
+  if (!hireDate) return '-'
+  const h = new Date(hireDate)
+  if (Number.isNaN(h.getTime())) return '-'
+  const now = new Date()
+  let months = (now.getFullYear() - h.getFullYear()) * 12 + (now.getMonth() - h.getMonth())
+  if (now.getDate() < h.getDate()) months--
+  if (months < 0) return '-'
+  const y = Math.floor(months / 12)
+  const m = months % 12
+  if (y === 0) return `${m} 个月`
+  if (m === 0) return `${y} 年`
+  return `${y} 年 ${m} 个月`
+}
 
 /* ------------------------------------------------------------------ */
 /* 客户（销货渠道）档案                                                  */
