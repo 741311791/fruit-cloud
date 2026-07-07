@@ -1,28 +1,18 @@
 'use client'
 
-import { Bell, Calendar, Search } from 'lucide-react'
+import { Bell, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { navLabels, parentLabels } from '@/lib/nav'
-import { FixedCostDialog } from './fixed-cost-dialog'
 import { ThemeSwitcher } from './theme-switcher'
 import { UserMenu } from './user-menu'
 
 type TopBarProps = {
   active: string
-  range: string
-  onRangeChange: (v: string) => void
   onNavigate: (id: string) => void
 }
 
-export function TopBar({ active, range, onRangeChange, onNavigate }: TopBarProps) {
+export function TopBar({ active, onNavigate }: TopBarProps) {
   const isDashboard = active === 'dashboard'
 
   return (
@@ -47,36 +37,6 @@ export function TopBar({ active, range, onRangeChange, onNavigate }: TopBarProps
           className="h-9 w-64 bg-card pl-9 text-sm"
         />
       </div>
-
-      {isDashboard && (
-        <>
-          <Select
-            value={range}
-            items={{
-              today: '今日',
-              week: '本周',
-              month: '本月累计',
-              quarter: '本季度',
-              year: '本年度',
-            }}
-            onValueChange={onRangeChange}
-          >
-            <SelectTrigger className="h-9 w-[132px] gap-2 bg-card text-sm">
-              <Calendar className="size-4 text-muted-foreground" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="today">今日</SelectItem>
-              <SelectItem value="week">本周</SelectItem>
-              <SelectItem value="month">本月累计</SelectItem>
-              <SelectItem value="quarter">本季度</SelectItem>
-              <SelectItem value="year">本年度</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <FixedCostDialog />
-        </>
-      )}
 
       <ThemeSwitcher />
 

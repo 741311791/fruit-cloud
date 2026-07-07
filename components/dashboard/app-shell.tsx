@@ -30,7 +30,6 @@ function renderView(id: string) {
 export function AppShell() {
   const [views, setViews] = useState<TabView[]>([{ id: HOME_ID, title: '首页', affix: true }])
   const [active, setActive] = useState(HOME_ID)
-  const [range, setRange] = useState('month')
   const [collapsed, setCollapsed] = useState(false)
   // Per-tab remount key: bumping it destroys the keep-alive cache (refresh).
   const [nonce, setNonce] = useState<Record<string, number>>({})
@@ -123,7 +122,7 @@ export function AppShell() {
         onToggle={() => setCollapsed((c) => !c)}
       />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar active={active} range={range} onRangeChange={setRange} onNavigate={openTab} />
+        <TopBar active={active} onNavigate={openTab} />
         <TabBar
           views={views}
           active={active}
