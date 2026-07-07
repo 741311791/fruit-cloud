@@ -5,6 +5,7 @@ import { AppSidebar } from './app-sidebar'
 import { TopBar } from './top-bar'
 import { Overview } from './overview'
 import { ModulePlaceholder } from './module-placeholder'
+import { PermissionManagement } from './permission-management'
 
 export function AppShell() {
   const [active, setActive] = useState('dashboard')
@@ -22,7 +23,13 @@ export function AppShell() {
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar active={active} range={range} onRangeChange={setRange} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          {active === 'dashboard' ? <Overview /> : <ModulePlaceholder moduleId={active} />}
+          {active === 'dashboard' ? (
+            <Overview />
+          ) : active === 'system-permission' ? (
+            <PermissionManagement />
+          ) : (
+            <ModulePlaceholder moduleId={active} />
+          )}
         </main>
       </div>
     </div>

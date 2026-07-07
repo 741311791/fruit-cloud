@@ -147,6 +147,7 @@ export const navGroups: NavGroup[] = [
         label: '系统管理',
         icon: Settings,
         children: [
+          { id: 'system-permission', label: '权限管理', desc: '用户、角色与部门的统一权限配置（RBAC）' },
           { id: 'system-base', label: '系统基础设置', desc: '权限、审批流、数据重建与系统开账' },
           { id: 'system-archive', label: '基础档案管理', desc: '商品/客户/供应商/职员与期初信息' },
         ],
