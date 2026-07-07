@@ -10,21 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Avatar,
-  AvatarFallback,
-} from '@/components/ui/avatar'
 import { navLabels, parentLabels } from '@/lib/nav'
 import { FixedCostDialog } from './fixed-cost-dialog'
 import { ThemeSwitcher } from './theme-switcher'
+import { UserMenu } from './user-menu'
 
 type TopBarProps = {
   active: string
   range: string
   onRangeChange: (v: string) => void
+  onNavigate: (id: string) => void
 }
 
-export function TopBar({ active, range, onRangeChange }: TopBarProps) {
+export function TopBar({ active, range, onRangeChange, onNavigate }: TopBarProps) {
   const isDashboard = active === 'dashboard'
 
   return (
@@ -87,11 +85,7 @@ export function TopBar({ active, range, onRangeChange }: TopBarProps) {
         <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
       </Button>
 
-      <Avatar className="size-9">
-        <AvatarFallback className="bg-secondary text-xs font-medium text-secondary-foreground">
-          管
-        </AvatarFallback>
-      </Avatar>
+      <UserMenu onNavigate={onNavigate} />
     </header>
   )
 }

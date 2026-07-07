@@ -43,11 +43,12 @@ export function buildPermissionTree(): PermNode[] {
   const nodes: PermNode[] = []
   for (const group of navGroups) {
     for (const item of group.items) {
-      if (!item.children?.length) continue
+      const children = item.children?.filter((c) => !c.excludeFromPermissions) ?? []
+      if (!children.length) continue
       nodes.push({
         id: item.id,
         label: item.label,
-        children: item.children.map((c) => ({ id: c.id, label: c.label })),
+        children: children.map((c) => ({ id: c.id, label: c.label })),
       })
     }
   }

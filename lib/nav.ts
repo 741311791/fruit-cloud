@@ -15,6 +15,8 @@ export type NavChild = {
   id: string
   label: string
   desc?: string
+  /** Personal/universal menus that should not appear in the RBAC permission tree. */
+  excludeFromPermissions?: boolean
 }
 
 export type NavItem = {
@@ -150,6 +152,12 @@ export const navGroups: NavGroup[] = [
           { id: 'system-permission', label: '权限管理', desc: '用户、角色与部门的统一权限配置（RBAC）' },
           { id: 'system-base', label: '系统基础设置', desc: '权限、审批流、数据重建与系统开账' },
           { id: 'system-archive', label: '基础档案管理', desc: '商品/客户/供应商/职员与期初信息' },
+          {
+            id: 'system-profile',
+            label: '个人中心',
+            desc: '账户设置：基本资料、安全设置与个性化偏好',
+            excludeFromPermissions: true,
+          },
         ],
       },
     ],
