@@ -7,6 +7,7 @@ import { TabBar, type TabView } from './tab-bar'
 import { Overview } from './overview'
 import { ModulePlaceholder } from './module-placeholder'
 import { PermissionManagement } from './permission-management'
+import { ArchiveManagement } from './archive-management'
 import { ProfileCenter } from './profile/profile-center'
 import { navLabels } from '@/lib/nav'
 import { cn } from '@/lib/utils'
@@ -23,6 +24,7 @@ function tabTitle(id: string): string {
 function renderView(id: string) {
   if (id === HOME_ID) return <Overview />
   if (id === 'system-permission') return <PermissionManagement />
+  if (id === 'system-archive') return <ArchiveManagement />
   if (id === 'system-profile') return <ProfileCenter />
   return <ModulePlaceholder moduleId={id} />
 }
