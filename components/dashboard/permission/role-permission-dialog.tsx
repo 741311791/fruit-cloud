@@ -199,7 +199,7 @@ export function RolePermissionDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="flex max-h-[90vh] max-w-3xl flex-col gap-0 overflow-hidden p-0">
+      <DialogContent className="flex max-h-[90vh] w-full max-w-[calc(100%-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl">
         <DialogHeader className="border-b border-border px-6 py-4">
           <DialogTitle className="flex items-center gap-2 text-base">
             <ShieldCheck className="size-5 text-primary" />
@@ -373,25 +373,32 @@ export function RolePermissionDialog({
                                   />
                                   <span className="text-sm text-foreground">{leaf.label}</span>
                                 </label>
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                                <div className="grid flex-1 grid-cols-3 gap-2 sm:grid-cols-6">
                                   {ACTION_LABELS.map((a) => {
                                     const actionLocked = viewOnly && a.key !== 'view'
+                                    const actionChecked = granted.includes(a.key)
                                     return (
-                                    <label
-                                      key={a.key}
-                                      className={cn(
-                                        'flex items-center gap-1.5 text-xs',
-                                        (!checked || actionLocked) && 'opacity-50',
-                                      )}
-                                    >
-                                      <Checkbox
-                                        className="size-3.5"
-                                        checked={granted.includes(a.key)}
-                                        disabled={readOnly || actionLocked}
-                                        onCheckedChange={(v) => toggleAction(leaf.id, a.key, v)}
-                                      />
-                                      <span className="text-muted-foreground">{a.label}</span>
-                                    </label>
+                                      <label
+                                        key={a.key}
+                                        className={cn(
+                                          'flex items-center justify-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors',
+                                          actionChecked
+                                            ? 'border-primary/40 bg-primary/5 text-foreground'
+                                            : 'border-border bg-background text-muted-foreground',
+                                          (!checked || actionLocked) && 'opacity-50',
+                                          readOnly || actionLocked
+                                            ? 'cursor-not-allowed'
+                                            : 'cursor-pointer hover:border-primary/40',
+                                        )}
+                                      >
+                                        <Checkbox
+                                          className="size-3.5"
+                                          checked={actionChecked}
+                                          disabled={readOnly || actionLocked}
+                                          onCheckedChange={(v) => toggleAction(leaf.id, a.key, v)}
+                                        />
+                                        <span>{a.label}</span>
+                                      </label>
                                     )
                                   })}
                                 </div>
