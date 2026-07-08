@@ -135,6 +135,12 @@ export const navGroups: NavGroup[] = [
         label: '行政人事 · OA',
         icon: Users,
         children: [
+          {
+            id: 'hr-todo',
+            label: '我的待办',
+            desc: '统一审批工作台：待我处理、我已处理、我发起的、抄送我的',
+            excludeFromPermissions: true,
+          },
           { id: 'hr-reimburse', label: '报销管理', desc: '报销申请、类别发票与财务审批请款' },
           { id: 'hr-attendance', label: '考勤薪资管理', desc: '请假审批、考勤录入与工资条生成' },
         ],
@@ -150,6 +156,7 @@ export const navGroups: NavGroup[] = [
         icon: Settings,
         children: [
           { id: 'system-permission', label: '权限管理', desc: '用户、角色与部门的统一权限配置（RBAC）' },
+          { id: 'system-workflow', label: '审批流配置', desc: '按业务单据可视化编排审批节点、条件分支与会签/或签策略' },
           { id: 'system-base', label: '系统基础设置', desc: '权限、审批流、数据重建与系统开账' },
           { id: 'system-archive', label: '基础档案管理', desc: '商品/客户/供应商/职员与期初信息' },
           {

@@ -10,6 +10,8 @@ import { PermissionManagement } from './permission-management'
 import { ArchiveManagement } from './archive-management'
 import { PurchaseOrderManagement } from './purchase/purchase-order-management'
 import { ProfileCenter } from './profile/profile-center'
+import { WorkflowConfig } from './workflow/workflow-config'
+import { MyTodo } from './todo/my-todo'
 import { navLabels } from '@/lib/nav'
 import { cn } from '@/lib/utils'
 
@@ -27,6 +29,8 @@ function renderView(id: string) {
   if (id === 'system-permission') return <PermissionManagement />
   if (id === 'system-archive') return <ArchiveManagement />
   if (id === 'purchase-order') return <PurchaseOrderManagement />
+  if (id === 'system-workflow') return <WorkflowConfig />
+  if (id === 'hr-todo') return <MyTodo />
   if (id === 'system-profile') return <ProfileCenter />
   return <ModulePlaceholder moduleId={id} />
 }
