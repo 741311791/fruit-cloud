@@ -15,6 +15,13 @@ export type ThemeMeta = {
 
 export const THEMES: ThemeMeta[] = [
   {
+    id: 'fresh-light',
+    label: '鲜果浅绿',
+    desc: '清爽白底 · 自然绿主色',
+    dark: false,
+    swatch: ['#f5f8f4', '#ffffff', '#2f9e63'],
+  },
+  {
     id: 'emerald-dark',
     label: '翠绿暗夜',
     desc: '近黑底色 · 鲜果绿点缀',
@@ -35,17 +42,10 @@ export const THEMES: ThemeMeta[] = [
     dark: true,
     swatch: ['#141414', '#242424', '#ededed'],
   },
-  {
-    id: 'fresh-light',
-    label: '鲜果浅绿',
-    desc: '清爽白底 · 自然绿主色',
-    dark: false,
-    swatch: ['#f5f8f4', '#ffffff', '#2f9e63'],
-  },
 ]
 
 export const DEFAULT_THEME: ThemeId = 'fresh-light'
-export const THEME_STORAGE_KEY = 'fruit-theme'
+export const THEME_STORAGE_KEY = 'fruit-theme-v2'
 
 export const themeById = (id: string): ThemeMeta =>
   THEMES.find((t) => t.id === id) ?? THEMES[0]
