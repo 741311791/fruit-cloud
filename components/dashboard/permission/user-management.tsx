@@ -273,7 +273,7 @@ export function UserManagement({
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       <label className="block text-xs text-muted-foreground">{label}</label>
       {children}
     </div>
